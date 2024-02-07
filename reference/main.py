@@ -11,9 +11,11 @@ def generate_chord_progression(prompt):
     try:
         # Ensure API key is set in your environment variables
         openai.api_key = os.getenv('OPENAI_API_KEY')
+        
         if not openai.api_key:
             raise ValueError("OpenAI API key is not set in environment variables.")
 
+        # few-shot prompt
         response = openai.ChatCompletion.create(
             model="gpt-4",
             messages=[
@@ -24,10 +26,11 @@ def generate_chord_progression(prompt):
                 {"role": "assistant", "content": ""},
                 {"role": "user", "content": prompt}
             ],
-            temperature = 0.6
+            temperature = 0.8  # experiment with the value; smaller to get less random results
         )
-
+        # print("response: " + response.choices[0].message['content'])
         return response.choices[0].message['content']
+    
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
@@ -43,18 +46,30 @@ def format_symbols(chord_symbols_raw):
     This function formats this into "Am7 D7 GM7 CM7 Bm7b5 E7 Am7 Dm7/G7". 
     Gets rid of the | marks, and connects the chords within the same bar with /s.
     '''
+    # checking the input
     print("raw: ")
-    print(" " + chord_symbols_raw)
+    print("  " + chord_symbols_raw)
+    
+    # if the last letter is |, delete it
     if chord_symbols_raw[-1] == "|":
         chord_symbols_raw = chord_symbols_raw[:-1]
     bars = chord_symbols_raw.split(" | ")
+    
+    # formatting logic
     for i in range(len(bars)):
         if " " in bars[i]:
             bars[i] = bars[i].replace(" ", "/")
     formatted_progression = " ".join(bars)
     formatted_progression.replace('.', '').replace(',', '')
+    
+    # if the last letter is /, delete it
+    if formatted_progression[-1] == "/":
+        formatted_progression = formatted_progression[:-1]
+    
+    # checking the output
     print("formatted: ")
-    print(" " + formatted_progression)
+    print("  " + formatted_progression)
+    
     return formatted_progression
 
 
@@ -69,8 +84,13 @@ def main():
     
     mode = 1 # 0 is normal, 1 is with more bass
     
+    # Check if the result folder exists, if not, create it
+    result_folder = "./result"
+    if not os.path.exists(result_folder):
+        os.makedirs(result_folder)
+    
     music_stream, chord_name = generate_midi_from_chord(chord_symbols, mode)
-    filename = f"./result/{chord_name}.mid"  # Construct the filename using f-string
+    filename = f"{result_folder}/{chord_name}.mid"  # Construct the filename using f-string
     mf = midi.translate.streamToMidiFile(music_stream)
     mf.open(filename, 'wb')
     mf.write()
