@@ -79,8 +79,12 @@ def main():
     load_dotenv()
     
     prompt = "Generate a jazz chord progression"
-    chord_symbols_raw = generate_chord_symbols(prompt)
-    chord_symbols = format_symbols(chord_symbols_raw)
+    # ORIGINAL CODE
+    # chord_symbols_raw = generate_chord_symbols(prompt)
+    # chord_symbols = format_symbols(chord_symbols_raw)
+    
+    # DEBUG MODE
+    chord_symbols = "BbM7 Am7/D7 GM7 Fm7b5/B7 Em7/A7 Dm7/G7 CM7 Fm6/Bb9"
     
     mode = 1 # 0 is normal, 1 is with more bass; 1 is generally better, but 0 can produce higher, more quiet vibes
     
