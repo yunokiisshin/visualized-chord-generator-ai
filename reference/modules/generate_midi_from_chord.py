@@ -1,4 +1,10 @@
-#generate_midi_from_chord.py: wrapper function that writes out the MIDI file that contains input chord progressions
+''' generate_midi_from_chord.py: 
+        This module generates a music stream (music21 functionality representing 
+        the whole music) from a given chord progression.
+    returns: 
+        music_stream: a music21 stream object representing the whole music 
+        chord_name: a string representing the chord progression. Used for file-naming purposes.
+'''
 from music21 import *
 from modules.chord_map import *
 
@@ -23,9 +29,13 @@ def generate_midi_from_chord(chord_symbols, mode):
                         ("bar6", chord_symbols[5]), 
                         ("bar7", chord_symbols[6]), 
                         ("bar8", chord_symbols[7])])
+    
+    # to store the notes of the previous chord
     previous_notes = []
     
     chord_name = ''
+    
+    # Iterate through the bars in the chord progression
     for bar in progression.values():
         bar_mod = bar.replace("/", "")
         chord_name = chord_name + bar_mod + '_'
@@ -46,12 +56,17 @@ def generate_midi_from_chord(chord_symbols, mode):
                 chord_type = chord_symbol[2:]   # add chord symbol
             else:
                 chord_type = chord_symbol[1:]
-            print("    -  root_note: ", root_note)
-            print("    - chord_type: ", chord_type)
-        # If the chord is the same as the last one, use the same notes
+            
+            # debug prints
+            # print("    -  root_note: ", root_note)
+            # print("    - chord_type: ", chord_type)
+            
+            # If the chord is the same as the last one, use the same notes
             if chord_symbol == chord_history['symbol']:
                 notes = chord_history['notes']
-            else:  # Otherwise, generate new notes
+            
+            # Otherwise, generate new notes
+            else:  
                 notes = generate(root_note, chord_type, mode, previous_notes)
                 previous_notes.clear()
                 previous_notes.extend(notes)
