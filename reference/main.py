@@ -6,8 +6,8 @@ import os
 from dotenv import load_dotenv
 
 
-
-def generate_chord_progression(prompt):
+''' This function uses OpenAI API to generate a jazz chord progression and then creates a MIDI file from it.'''
+def generate_chord_symbols(prompt):
     try:
         # Ensure API key is set in your environment variables
         openai.api_key = os.getenv('OPENAI_API_KEY')
@@ -79,27 +79,23 @@ def main():
     load_dotenv()
     
     prompt = "Generate a jazz chord progression"
-    chord_symbols_raw = generate_chord_progression(prompt)
+    chord_symbols_raw = generate_chord_symbols(prompt)
     chord_symbols = format_symbols(chord_symbols_raw)
     
-    mode = 1 # 0 is normal, 1 is with more bass
+    mode = 1 # 0 is normal, 1 is with more bass; 1 is generally better, but 0 can produce higher, more quiet vibes
     
     # Check if the result folder exists, if not, create it
     result_folder = "./result"
     if not os.path.exists(result_folder):
         os.makedirs(result_folder)
     
+    # Generate the MIDI file from the chord progression
     music_stream, chord_name = generate_midi_from_chord(chord_symbols, mode)
     filename = f"{result_folder}/{chord_name}.mid"  # Construct the filename using f-string
     mf = midi.translate.streamToMidiFile(music_stream)
     mf.open(filename, 'wb')
     mf.write()
     mf.close()
-    
-    # drum_pattern = drum_pattern()
-    # merge_midi_files(drum_pattern, filename, 'merged_midi.mid')
-        
-        
         
         
 if __name__ == "__main__":
