@@ -21,3 +21,4 @@ I have used OpenAI API to let the system come up with its own chord progression,
 
 
 #### Next steps
+
