@@ -32,138 +32,75 @@ def fill_dict_value(note_dict, key, note):
         note_val.midi += 12
         
 
-'''fills up the entire note_dict'''
+'''returns a list of intervals for fill_dict_value to process'''
 def prepare_note_dict(root_note, chord_type):
     
     root = Pitch(root_note)
-
-    if chord_type == '': # major triad
-        third = shift(root, 4)
-        fifth = shift(root, 7)
-        fill_dict_value(note_dict, "root", root)
-        fill_dict_value(note_dict, "third", third)
-        fill_dict_value(note_dict, "fifth", fifth)
     
-    elif chord_type == 'm': # minor triad
-        third = shift(root, 3)
-        fifth = shift(root, 7)
-        fill_dict_value(note_dict, "root", root)
-        fill_dict_value(note_dict, "third", third)
-        fill_dict_value(note_dict, "fifth", fifth)
     
-    elif chord_type == '7': # dominant 7th
-        third = shift(root, 4)
-        fifth = shift(root, 7)
-        seventh = shift(root, 10)
-        fill_dict_value(note_dict, "root", root)
-        fill_dict_value(note_dict, "third", third)
-        fill_dict_value(note_dict, "fifth", fifth)
-        fill_dict_value(note_dict, "seventh", seventh)
+    if 'sus4' in chord_type:
+        chord_type = chord_type.replace('sus4', '')
     
-    elif chord_type == 'M7' or 'Maj7': # major 7th
-        third = shift(root, 4)
-        fifth = shift(root, 7)
-        seventh = shift(root, 11)
-        fill_dict_value(note_dict, "seventh", seventh)
-        fill_dict_value(note_dict, "root", root)
-        fill_dict_value(note_dict, "third", third)
-        fill_dict_value(note_dict, "fifth", fifth)
-        
-    elif chord_type == 'm7': # minor 7th
-        third = shift(root, 3)
-        fifth = shift(root, 7)
-        seventh = shift(root, 10)
-        fill_dict_value(note_dict, "seventh", seventh)
-        fill_dict_value(note_dict, "root", root)
-        fill_dict_value(note_dict, "third", third)
-        fill_dict_value(note_dict, "fifth", fifth)
-   
-    elif chord_type == 'dim7': # dimished 7th
-        third = shift(root, 3)
-        fifth = shift(root, 6)
-        seventh = shift(root, 9)
-        fill_dict_value(note_dict, "seventh", seventh)
-        fill_dict_value(note_dict, "root", root)
-        fill_dict_value(note_dict, "third", third)
-        fill_dict_value(note_dict, "fifth", fifth)
-        
-    elif chord_type == 'M9': # major 9th
-        third = shift(root, 4)
-        fifth = shift(root, 7)
-        seventh = shift(root, 11)
-        ninth = shift(root, 14)
-        fill_dict_value(note_dict, "ninth", ninth)
-        fill_dict_value(note_dict, "seventh", seventh)
-        fill_dict_value(note_dict, "root", root)
-        fill_dict_value(note_dict, "third", third)
-        fill_dict_value(note_dict, "fifth", fifth)
-        
-    elif chord_type == 'm9': # minor 9th
-        third = shift(root, 3)
-        fifth = shift(root, 7)
-        seventh = shift(root, 10)
-        ninth = shift(root, 14)
-        fill_dict_value(note_dict, "ninth", ninth)
-        fill_dict_value(note_dict, "seventh", seventh)
-        fill_dict_value(note_dict, "root", root)
-        fill_dict_value(note_dict, "third", third)
-        fill_dict_value(note_dict, "fifth", fifth)
+    if 'sus2' in chord_type:
+        chord_type = chord_type.replace('sus2', '')
     
-    elif chord_type == '9': # dominant 9th
-        third = shift(root, 4)
-        fifth = shift(root, 7)
-        seventh = shift(root, 10)
-        ninth = shift(root, 14)
-        fill_dict_value(note_dict, "ninth", ninth)
-        fill_dict_value(note_dict, "seventh", seventh)
-        fill_dict_value(note_dict, "root", root)
-        fill_dict_value(note_dict, "third", third)
-        fill_dict_value(note_dict, "fifth", fifth)
+    if 'b5' in chord_type:
+        chord_type = chord_type.replace('b5', '')
         
-    elif chord_type == '7b9': # dominant 7th flat 9th
-        third = shift(root, 4)
-        fifth = shift(root, 7)
-        seventh = shift(root, 10)
-        ninth = shift(root, 13)
-        fill_dict_value(note_dict, "ninth", ninth)
-        fill_dict_value(note_dict, "seventh", seventh)
-        fill_dict_value(note_dict, "root", root)
-        fill_dict_value(note_dict, "third", third)
-        fill_dict_value(note_dict, "fifth", fifth)
+    if '#5' in chord_type:
+        chord_type = chord_type.replace('#5', '')
+        
     
-    elif chord_type == '7#9': # dominant 7th sharp 9th
-        third = shift(root, 4)
-        fifth = shift(root, 7)
-        seventh = shift(root, 10)
-        ninth = shift(root, 15)
-        fill_dict_value(note_dict, "ninth", ninth)
-        fill_dict_value(note_dict, "seventh", seventh)
-        fill_dict_value(note_dict, "root", root)
-        fill_dict_value(note_dict, "third", third)
-        fill_dict_value(note_dict, "fifth", fifth)
-        
-    else: # throw error
+    chord_formulas = {
+        '': [0, 4, 7],  # Major triad
+        'm': [0, 3, 7],  # Minor triad
+        '7': [0, 4, 7, 10],  # Dominant 7th
+        'M7': [0, 4, 7, 11],  # Major 7th
+        'Maj7': [0, 4, 7, 11],  
+        'maj7': [0, 4, 7, 11],  
+        'm7': [0, 3, 7, 10],  # Minor 7th
+        'dim7': [0, 3, 6, 9],  # Diminished 7th
+        'M9': [0, 4, 7, 11, 14],  # Major 9th
+        'm9': [0, 3, 7, 10, 14],  # Minor 9th
+        '9': [0, 4, 7, 10, 14],  # Dominant 9th
+        '7b9': [0, 4, 7, 10, 13],  # Dominant 7th flat 9th
+        '7#9': [0, 4, 7, 10, 15],  # Dominant 7th sharp 9th
+        '13': [0, 4, 7, 10, 14, 21],  # Dominant 13th
+        '7#11': [0, 4, 7, 10, 18],  # Dominant 7th sharp 11th
+        '7b13': [0, 4, 7, 10, 21],  # Dominant 7th flat 13th
+    }
+    if chord_type not in chord_formulas.keys():
+        #error
         error = "Chord type not recognized."
         raise ValueError(error)
-        
-        
     
-    if 'sus4' in chord_type: # alter the 3rd in the chord up a step
+    # interval_list: list of intervals to be added to the root note
+    interval_list = chord_formulas[chord_type]
+    
+    interval_strings = ["root", "third", "fifth", "seventh", "ninth", "extentions"]
+    
+    for i, interval in enumerate(interval_list):
+        interval_string = str(interval_strings[i])  # Ensure this results in a string
+        note = shift(root, interval)
+        fill_dict_value(note_dict, interval_string, note)
+
+    # Alter the notes based on the chord type
+    if 'sus4' in chord_type: 
+        note_dict["third"].clear()
         third = shift(root, 5)
-        note_dict["third"].clear()
         fill_dict_value(note_dict, "third", third)
         
-    if 'sus2' in chord_type: # alter the 3rd in the chord down a step
+    if 'sus2' in chord_type: 
+        note_dict["third"].clear()
         third = shift(root, 2)
-        note_dict["third"].clear()
         fill_dict_value(note_dict, "third", third)
         
-    if 'b5' in chord_type: # alter the 5th in the chord down a step
+    if 'b5' in chord_type: 
         note_dict["fifth"].clear()
         fifth = shift(root, 6)
         fill_dict_value(note_dict, "fifth", fifth)
     
-    if '#5' in chord_type: # alter the 5th in the chord up a step
+    if '#5' in chord_type: 
         note_dict["fifth"].clear()
         fifth = shift(root, 8)
         fill_dict_value(note_dict, "fifth", fifth)

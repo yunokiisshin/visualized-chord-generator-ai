@@ -1,16 +1,12 @@
 #generate_midi_from_chord.py: wrapper function that writes out the MIDI file that contains input chord progressions
-
 from music21 import *
 from modules.chord_map import *
-
-import mido
-from mido import MidiFile, MidiTrack, Message
-
 
 # stores the previous generation history so the next iteration is smooth
 chord_history = {'symbol': None, 'notes': []}
 
 def generate_midi_from_chord(chord_symbols, mode):
+    print()
     # Create a music21 stream object to hold the notes and chords
     music_stream = stream.Stream()    
     
