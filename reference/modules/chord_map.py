@@ -16,13 +16,13 @@ LOWEST_NOTE = pitch.Pitch("F#3").midi
 HIGHEST_NOTE = pitch.Pitch("D5").midi
 
 
+''' Shifts a note by a given number of semitones. '''
 def shift(note, semitones):
-    ''' Shifts a note by a given number of semitones. '''
     return Pitch(note.midi + semitones)
 
 
+''' Fills up the note_dict with MIDI note values for a given pitch range. '''
 def fill_dict_value(note_dict, key, note):
-    ''' Fills up the note_dict with MIDI note values for a given pitch range. '''
     note_val = pitch.Pitch(note)
     while note_val.midi >= LOWEST_NOTE:
         note_val.midi -= 12
@@ -37,7 +37,7 @@ def prepare_note_dict(root_note, chord_type):
     
     root = Pitch(root_note)
     
-    
+    # Remove any suffixes from the chord type, it would be processed later
     if 'sus4' in chord_type:
         chord_type = chord_type.replace('sus4', '')
     
@@ -50,7 +50,7 @@ def prepare_note_dict(root_note, chord_type):
     if '#5' in chord_type:
         chord_type = chord_type.replace('#5', '')
         
-    
+    # chord_formulas contain intervals for possible chord types
     chord_formulas = {
         '': [0, 4, 7],  # Major triad
         'm': [0, 3, 7],  # Minor triad
@@ -58,6 +58,7 @@ def prepare_note_dict(root_note, chord_type):
         'M7': [0, 4, 7, 11],  # Major 7th
         'Maj7': [0, 4, 7, 11],  
         'maj7': [0, 4, 7, 11],  
+        'm6': [0, 3, 7, 9],  # Minor 6th
         'm7': [0, 3, 7, 10],  # Minor 7th
         'dim7': [0, 3, 6, 9],  # Diminished 7th
         'M9': [0, 4, 7, 11, 14],  # Major 9th
@@ -69,8 +70,8 @@ def prepare_note_dict(root_note, chord_type):
         '7#11': [0, 4, 7, 10, 18],  # Dominant 7th sharp 11th
         '7b13': [0, 4, 7, 10, 21],  # Dominant 7th flat 13th
     }
+    
     if chord_type not in chord_formulas.keys():
-        #error
         error = "Chord type not recognized."
         raise ValueError(error)
     
@@ -105,11 +106,13 @@ def prepare_note_dict(root_note, chord_type):
         fifth = shift(root, 8)
         fill_dict_value(note_dict, "fifth", fifth)
         
+    print("note_dict: ", note_dict)
+        
         
     
 '''generate the current chord based on the previous input'''
 def generate(root_note, chord_type, mode, previous_notes): # previous notes is list of pitch objects
-    
+    print()
     if mode == 0:  # each chordal note is only added once; basically 3 or 4 notes
         # convert previous_notes to int list
         previous_val = []
@@ -308,8 +311,8 @@ def generate(root_note, chord_type, mode, previous_notes): # previous notes is l
         
         return note_pitches
     
-    
-    elif mode == 1:  # 4 or 5-note composition
+    else:          # mode == 1; 4 or 5-note composition
+        
         # convert previous_notes to int list
         previous_val = []
         for note in previous_notes:
@@ -412,7 +415,6 @@ def generate(root_note, chord_type, mode, previous_notes): # previous notes is l
                 
 
         else:   # there is a previous chord generated
-            
             # finding the middle note from previous chord as reference
             ref = previous_val[len(previous_val)//2]
         
@@ -531,249 +533,6 @@ def generate(root_note, chord_type, mode, previous_notes): # previous notes is l
                 
             else:
                 notes.append(bottom_root-12)
-                
-        note_pitches = []  
-                
-        for note in notes:
-            midi_number = note
-            p = pitch.Pitch()
-            p.midi = midi_number
-            note_pitches.append(p)
-        
-        return note_pitches
-    
-    elif mode == 2: # 5 or 6-note generation
-        # convert previous_notes to int list
-        previous_val = []
-        for note in previous_notes:
-            previous_val.append(note.midi)
-        previous_val = sorted(previous_val)
-
-        # clear the chord dictionary
-        for key in note_dict.keys():
-            note_dict[key].clear()
-        
-        
-        # notes have to be a list of Pitch object
-        notes = []
-        
-        # if this is the first time generating a chord
-        if previous_val == []:
-            note_list = []
-            for value in note_dict.values():
-                for item in value:
-                    note_list.append(item)
-            
-            first_note = random.choice(note_list)
-            notes.append(first_note)
-            
-            if first_note in note_dict["root"]: # choosing third and fifth
-                bucket = []
-                for item in note_dict["third"]:
-                    if abs(item-first_note) <= 9:
-                        bucket.append(item)
-                second_note = random.choice(bucket)
-                notes.append(second_note)
-                
-                bucket.clear()
-                for item in note_dict["fifth"]:
-                    if abs(item-first_note) <= 9:
-                        bucket.append(item)
-                third_note = random.choice(bucket)
-                notes.append(third_note)
-                
-                bucket.clear()
-                for item in note_dict["seventh"]:
-                    if abs(item-first_note) <= 9:
-                        bucket.append(item)
-                if bucket != []:
-                    fourth_note = random.choice(bucket)
-                    notes.append(fourth_note)
-                
-            elif first_note in note_dict["third"]:
-                bucket = []
-                for item in note_dict["root"]:
-                    if abs(item-first_note) <= 9:
-                        bucket.append(item)
-                second_note = random.choice(bucket)
-                notes.append(second_note)
-                
-                bucket.clear()
-                for item in note_dict["fifth"]:
-                    if abs(item-first_note) <= 9:
-                        bucket.append(item)
-                third_note = random.choice(bucket)
-                notes.append(third_note)
-                
-                bucket.clear()
-                for item in note_dict["seventh"]:
-                    if abs(item-first_note) <= 9:
-                        bucket.append(item)
-                if bucket != []:
-                    fourth_note = random.choice(bucket)
-                    notes.append(fourth_note)
-                
-            elif first_note in note_dict["fifth"]: 
-                bucket = []
-                for item in note_dict["root"]:
-                    if abs(item-first_note) <= 9:
-                        bucket.append(item)
-                second_note = random.choice(bucket)
-                notes.append(second_note)
-                
-                bucket.clear()
-                for item in note_dict["third"]:
-                    if abs(item-first_note) <= 9:
-                        bucket.append(item)
-                third_note = random.choice(bucket)
-                notes.append(third_note)
-                
-                bucket.clear()
-                for item in note_dict["seventh"]:
-                    if abs(item-first_note) <= 9:
-                        bucket.append(item)
-                if bucket != []:
-                    fourth_note = random.choice(bucket)
-                    notes.append(fourth_note)
-
-            bottom_root = note_dict['root'][0]
-            
-            if bottom_root in notes:
-                notes.append(bottom_root-12)
-                notes.append(bottom_root-24)
-                        
-            else:         
-                notes.append(bottom_root-12)
-                notes.append(bottom_root)
-            
-
-        else:   # there is a previous chord generated
-            
-            # finding the middle note from previous chord as reference
-            ref = previous_val[len(previous_val)//2]
-        
-            # create a list of all notes
-            note_list = []
-            for value in note_dict.values():
-                for item in value:
-                    note_list.append(item)
-            closest = note_list[0]
-            distance = 100
-            
-            for i, note in enumerate(note_list):
-                if abs(ref - note) < distance:
-                    closest = note_list[i]
-                    distance = abs(closest-ref)
-
-            # make that note the first note of the current chord
-            first_note = closest
-            notes.append(first_note)
-            
-            if first_note in note_dict["root"]: 
-                bucket = []
-                for item in note_dict["third"]:
-                    if abs(item-first_note) <= 9:
-                        bucket.append(item)
-                second_note = random.choice(bucket)
-                notes.append(second_note)
-                
-                bucket.clear()
-                for item in note_dict["fifth"]:
-                    if abs(item-first_note) <= 9:
-                        bucket.append(item)
-                third_note = random.choice(bucket)
-                notes.append(third_note)
-                
-                bucket.clear()
-                for item in note_dict["seventh"]:
-                    if abs(item-first_note) <= 9:
-                        bucket.append(item)
-                if bucket != []:
-                    fourth_note = random.choice(bucket)
-                    notes.append(fourth_note)
-                
-            elif first_note in note_dict["third"]: # choosing root and fifth
-                bucket = []
-                for item in note_dict["root"]:
-                    if abs(item-first_note) <= 9:
-                        bucket.append(item)
-                second_note = random.choice(bucket)
-                notes.append(second_note)
-                
-                bucket.clear()
-                for item in note_dict["fifth"]:
-                    if abs(item-first_note) <= 9:
-                        bucket.append(item)
-                third_note = random.choice(bucket)
-                notes.append(third_note)
-                
-                bucket.clear()
-                for item in note_dict["seventh"]:
-                    if abs(item-first_note) <= 9:
-                        bucket.append(item)
-                if bucket != []:
-                    fourth_note = random.choice(bucket)
-                    notes.append(fourth_note)
-                
-            elif first_note in note_dict["fifth"]: # choosing root and third
-                bucket = []
-                for item in note_dict["root"]:
-                    if abs(item-first_note) <= 9:
-                        bucket.append(item)
-                second_note = random.choice(bucket)
-                notes.append(second_note)
-                
-                bucket.clear()
-                for item in note_dict["third"]:
-                    if abs(item-first_note) <= 9:
-                        bucket.append(item)
-                third_note = random.choice(bucket)
-                notes.append(third_note)        
-                
-                bucket.clear()
-                for item in note_dict["seventh"]:
-                    if abs(item-first_note) <= 9:
-                        bucket.append(item)
-                if bucket != []:
-                    fourth_note = random.choice(bucket)
-                    notes.append(fourth_note)
-            
-            elif first_note in note_dict["seventh"]: 
-                bucket = []
-                for item in note_dict["third"]:
-                    if abs(item-first_note) <= 9:
-                        bucket.append(item)
-                second_note = random.choice(bucket)
-                notes.append(second_note)
-                
-                bucket.clear()
-                for item in note_dict["fifth"]:
-                    if abs(item-first_note) <= 9:
-                        bucket.append(item)
-                third_note = random.choice(bucket)
-                notes.append(third_note)
-                
-                bucket.clear()
-                for item in note_dict["root"]:
-                    if abs(item-first_note) <= 9:
-                        bucket.append(item)
-                if bucket != []:
-                    fourth_note = random.choice(bucket)
-                    notes.append(fourth_note)
-                    
-                bucket.clear()
-            
-            bottom_root = note_dict['root'][0]
-            
-            if bottom_root in notes:
-                notes.append(bottom_root-12)
-                notes.append(bottom_root-24)
-                        
-            else:         
-                notes.append(bottom_root-12)
-                notes.append(bottom_root)
-            
-                
                 
         note_pitches = []  
                 
