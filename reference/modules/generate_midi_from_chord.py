@@ -58,8 +58,8 @@ def generate_midi_from_chord(chord_symbols, mode):
                 chord_type = chord_symbol[1:]
             
             # debug prints
-            # print("    -  root_note: ", root_note)
-            # print("    - chord_type: ", chord_type)
+            print("    -  root_note: ", root_note)
+            print("    - chord_type: ", chord_type)
             
             # If the chord is the same as the last one, use the same notes
             if chord_symbol == chord_history['symbol']:
@@ -85,4 +85,6 @@ def generate_midi_from_chord(chord_symbols, mode):
     
     return music_stream, chord_name
     
+
+# By the way, we have no way of distinguishing between "B b9" and "Bb 9" in the chord progression...
     
