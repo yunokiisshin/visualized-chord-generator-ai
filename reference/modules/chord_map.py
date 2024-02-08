@@ -377,16 +377,7 @@ def generate(root_note, chord_type, mode, previous_notes): # previous notes is l
             else: 
                 raise ValueError("Error: you're not supposed to see this")
                     
-        # convert the value to MIDI-suited data
-        note_pitches = []  
-                
-        for note in notes:
-            midi_number = note
-            p = pitch.Pitch()
-            p.midi = midi_number
-            note_pitches.append(p)
         
-        return note_pitches
     
     else:          # mode == 1; 4 or 5-note composition
         
@@ -640,13 +631,14 @@ def generate(root_note, chord_type, mode, previous_notes): # previous notes is l
                 
             else:
                 notes.append(bottom_root-12)
-                
-        note_pitches = []  
-                
-        for note in notes:
-            midi_number = note
-            p = pitch.Pitch()
-            p.midi = midi_number
-            note_pitches.append(p)
-        
-        return note_pitches
+    
+    # convert the value to MIDI-suited data            
+    note_pitches = []  
+            
+    for note in notes:
+        midi_number = note
+        p = pitch.Pitch()
+        p.midi = midi_number
+        note_pitches.append(p)
+    
+    return note_pitches
