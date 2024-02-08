@@ -1,18 +1,12 @@
-body, html {
+#midiContainer {
+  position: relative;
+  width: 100%;
   height: 100vh;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #C9E4CA;
-  transition: background-color 1s ease-in-out;
+  background-color: #f0f0f0; /* Light grey background */
 }
 
-.canvas {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.note-rectangle {
+  position: absolute;
+  background-color: #4CAF50; /* Green color for the rectangles */
+  /* Additional styling as needed */
 }
