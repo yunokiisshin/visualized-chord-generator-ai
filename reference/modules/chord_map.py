@@ -12,8 +12,8 @@ import random
 note_dict = dict([("root", []), ("third", []), ("fifth", []), ("seventh", []), ("ninth", []), ("extentions", [])])
 
 # Constants for MIDI note range
-LOWEST_NOTE = pitch.Pitch("F#3").midi
-HIGHEST_NOTE = pitch.Pitch("D5").midi
+LOWEST_NOTE = pitch.Pitch("F3").midi
+HIGHEST_NOTE = pitch.Pitch("E5").midi
 
 
 ''' Shifts a note by a given number of semitones. '''
