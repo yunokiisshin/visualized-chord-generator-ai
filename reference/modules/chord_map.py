@@ -14,7 +14,8 @@ note_dict = dict([("root", []), ("third", []), ("fifth", []), ("seventh", []), (
 # Constants for MIDI note range
 LOWEST_NOTE = pitch.Pitch("F3").midi
 HIGHEST_NOTE = pitch.Pitch("E5").midi
-
+print("LOWEST_NOTE: ", LOWEST_NOTE) # 53
+print("HIGHEST_NOTE: ", HIGHEST_NOTE) # 76
 
 ''' Shifts a note by a given number of semitones. '''
 def shift(note, semitones):
@@ -119,7 +120,6 @@ def prepare_note_dict(root_note, chord_type):
         fill_dict_value(note_dict, "fifth", fifth)
         
     if is_b9:
-        print("is_b9: ", is_b9)
         note_dict["ninth"].clear()
         ninth = shift(root, 1)
         fill_dict_value(note_dict, "ninth", ninth)
@@ -133,13 +133,12 @@ def prepare_note_dict(root_note, chord_type):
         if len(note_dict["ninth"]) > 1:
             note_dict["ninth"].pop(0)
         
-    print("note_dict: ", note_dict)
+    # print("note_dict: ", note_dict)
         
         
     
 '''generate the current chord based on the previous input'''
 def generate(root_note, chord_type, mode, previous_notes): # previous notes is list of pitch objects
-    print()
     if mode == 0:  # each chordal note is only added once; basically 3 or 4 notes
         # convert previous_notes to int list
         previous_val = []
@@ -168,95 +167,77 @@ def generate(root_note, chord_type, mode, previous_notes): # previous notes is l
             
             # choose the rest of the notes
             if first_note in note_dict["root"]: 
-                bucket = [] # temporary container
-                key = ["third", "fifth", "seventh", "ninth", "extentions"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                 # temporary container
+                keys = ["third", "fifth", "seventh", "ninth", "extentions"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
                     
                 
             elif first_note in note_dict["third"]: # choosing root and fifth
-                bucket = []
-                key = ["root", "fifth", "seventh", "ninth", "extentions"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                
+                keys = ["root", "fifth", "seventh", "ninth", "extentions"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
                 
             elif first_note in note_dict["fifth"]: # choosing root and third
-                bucket = []
-                key = ["root", "third", "seventh", "ninth", "extentions"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                
+                keys = ["root", "third", "seventh", "ninth", "extentions"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
                     
             elif first_note in note_dict["seventh"]: # choosing root and third
-                bucket = []
-                key = ["root", "third", "fifth", "ninth", "extentions"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                
+                keys = ["root", "third", "fifth", "ninth", "extentions"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
                     
             elif first_note in note_dict["ninth"]: # choosing root and third
-                bucket = []
-                key = ["root", "third", "fifth", "seventh", "extentions"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                
+                keys = ["root", "third", "fifth", "seventh", "extentions"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
 
             elif first_note in note_dict["extentions"]: # choosing root and third
-                bucket = []
-                key = ["root", "third", "fifth", "seventh", "ninth"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                
+                keys = ["root", "third", "fifth", "seventh", "ninth"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
             
             else: 
                 raise ValueError("Error: you're not supposed to see this")
@@ -284,100 +265,81 @@ def generate(root_note, chord_type, mode, previous_notes): # previous notes is l
             
             # choose the rest of the notes
             if first_note in note_dict["root"]: 
-                bucket = [] # temporary container
-                key = ["third", "fifth", "seventh", "ninth", "extentions"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                 # temporary container
+                keys = ["third", "fifth", "seventh", "ninth", "extentions"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
                     
                 
             elif first_note in note_dict["third"]: # choosing root and fifth
-                bucket = []
-                key = ["root", "fifth", "seventh", "ninth", "extentions"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                
+                keys = ["root", "fifth", "seventh", "ninth", "extentions"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
                 
             elif first_note in note_dict["fifth"]: # choosing root and third
-                bucket = []
-                key = ["root", "third", "seventh", "ninth", "extentions"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                
+                keys = ["root", "third", "seventh", "ninth", "extentions"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
                     
             elif first_note in note_dict["seventh"]: # choosing root and third
-                bucket = []
-                key = ["root", "third", "fifth", "ninth", "extentions"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                
+                keys = ["root", "third", "fifth", "ninth", "extentions"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
                     
             elif first_note in note_dict["ninth"]: # choosing root and third
-                bucket = []
-                key = ["root", "third", "fifth", "seventh", "extentions"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                
+                keys = ["root", "third", "fifth", "seventh", "extentions"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
 
             elif first_note in note_dict["extentions"]: # choosing root and third
-                bucket = []
-                key = ["root", "third", "fifth", "seventh", "ninth"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                
+                keys = ["root", "third", "fifth", "seventh", "ninth"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
             
             else: 
                 raise ValueError("Error: you're not supposed to see this")
-                    
-        
+            
     
     else:          # mode == 1; 4 or 5-note composition
         
@@ -408,95 +370,77 @@ def generate(root_note, chord_type, mode, previous_notes): # previous notes is l
             
             # choose the rest of the notes
             if first_note in note_dict["root"]: 
-                bucket = [] # temporary container
-                key = ["third", "fifth", "seventh", "ninth", "extentions"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                 # temporary container
+                keys = ["third", "fifth", "seventh", "ninth", "extentions"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
                     
                 
             elif first_note in note_dict["third"]: # choosing root and fifth
-                bucket = []
-                key = ["root", "fifth", "seventh", "ninth", "extentions"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                
+                keys = ["root", "fifth", "seventh", "ninth", "extentions"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
                 
             elif first_note in note_dict["fifth"]: # choosing root and third
-                bucket = []
-                key = ["root", "third", "seventh", "ninth", "extentions"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                
+                keys = ["root", "third", "seventh", "ninth", "extentions"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
                     
             elif first_note in note_dict["seventh"]: # choosing root and third
-                bucket = []
-                key = ["root", "third", "fifth", "ninth", "extentions"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                
+                keys = ["root", "third", "fifth", "ninth", "extentions"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
                     
             elif first_note in note_dict["ninth"]: # choosing root and third
-                bucket = []
-                key = ["root", "third", "fifth", "seventh", "extentions"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                
+                keys = ["root", "third", "fifth", "seventh", "extentions"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
 
             elif first_note in note_dict["extentions"]: # choosing root and third
-                bucket = []
-                key = ["root", "third", "fifth", "seventh", "ninth"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                
+                keys = ["root", "third", "fifth", "seventh", "ninth"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
             
             else: 
                 raise ValueError("Error: you're not supposed to see this")
@@ -531,106 +475,90 @@ def generate(root_note, chord_type, mode, previous_notes): # previous notes is l
             
             # choose the rest of the notes
             if first_note in note_dict["root"]: 
-                bucket = [] # temporary container
-                key = ["third", "fifth", "seventh", "ninth", "extentions"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                 # temporary container
+                keys = ["third", "fifth", "seventh", "ninth", "extentions"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
                     
                 
             elif first_note in note_dict["third"]: # choosing root and fifth
-                bucket = []
-                key = ["root", "fifth", "seventh", "ninth", "extentions"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                
+                keys = ["root", "fifth", "seventh", "ninth", "extentions"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
                 
             elif first_note in note_dict["fifth"]: # choosing root and third
-                bucket = []
-                key = ["root", "third", "seventh", "ninth", "extentions"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                
+                keys = ["root", "third", "seventh", "ninth", "extentions"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
                     
             elif first_note in note_dict["seventh"]: # choosing root and third
-                bucket = []
-                key = ["root", "third", "fifth", "ninth", "extentions"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                
+                keys = ["root", "third", "fifth", "ninth", "extentions"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
                     
             elif first_note in note_dict["ninth"]: # choosing root and third
-                bucket = []
-                key = ["root", "third", "fifth", "seventh", "extentions"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                
+                keys = ["root", "third", "fifth", "seventh", "extentions"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
 
             elif first_note in note_dict["extentions"]: # choosing root and third
-                bucket = []
-                key = ["root", "third", "fifth", "seventh", "ninth"]
-                random.shuffle(key)
-                for item in key:
-                    if len(note_dict[item]) > 0:
-                        for value in note_dict[item]:
-                            if abs(value-first_note) <= 9 or len(note_dict[item]) == 1:
-                                bucket.append(value)
-                        next_element_note = random.choice(bucket)
-                        notes.append(next_element_note)
-                        bucket.clear()
-                    else:
-                        continue
+                
+                keys = ["root", "third", "fifth", "seventh", "ninth"]
+                random.shuffle(keys)
+                for key in keys:
+                    values = note_dict[key]
+                    if values:  # Proceed only if there are values
+                        # Filter values based on the condition, use min to ensure at least one element is chosen
+                        valid_values = [value for value in values if abs(value - first_note) <= 9 or len(values) == 1]
+                        next_note = random.choice(valid_values)  # Choose a random valid value
+                        notes.append(next_note)
             
             else: 
                 raise ValueError("Error: you're not supposed to see this")
             
             
             bottom_root = note_dict['root'][0]
-            if bottom_root not in notes:
-                notes.append(bottom_root)
+            if bottom_root in notes:
+                notes.append(bottom_root-12)
                 
             else:
-                notes.append(bottom_root-12)
+                notes.append(bottom_root)
+    
+    print("Final notes: " + str(notes))
     
     # convert the value to MIDI-suited data            
     note_pitches = []  

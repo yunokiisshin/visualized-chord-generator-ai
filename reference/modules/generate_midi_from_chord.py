@@ -5,6 +5,7 @@
         music_stream: a music21 stream object representing the whole music 
         chord_name: a string representing the chord progression. Used for file-naming purposes.
 '''
+
 from music21 import *
 from modules.chord_map import *
 
@@ -12,7 +13,7 @@ from modules.chord_map import *
 chord_history = {'symbol': None, 'notes': []}
 
 def generate_midi_from_chord(chord_symbols, mode):
-    print()
+    
     # Create a music21 stream object to hold the notes and chords
     music_stream = stream.Stream()    
     
@@ -45,6 +46,7 @@ def generate_midi_from_chord(chord_symbols, mode):
             chords_in_bar = [bar] # if there's only one chord in the bar, still make it a list
 
         for chord_symbol in chords_in_bar:
+            print()
             print("  chord_symbol: ", chord_symbol)
             
             # Determine the root note and the type of chord
@@ -58,8 +60,8 @@ def generate_midi_from_chord(chord_symbols, mode):
                 chord_type = chord_symbol[1:]
             
             # debug prints
-            print("    -  root_note: ", root_note)
-            print("    - chord_type: ", chord_type)
+            # print("    -  root_note: ", root_note)
+            # print("    - chord_type: ", chord_type)
             
             # If the chord is the same as the last one, use the same notes
             if chord_symbol == chord_history['symbol']:

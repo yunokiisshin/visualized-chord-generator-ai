@@ -84,9 +84,10 @@ def main():
     # chord_symbols = format_symbols(chord_symbols_raw)
     
     # DEBUG MODE
-    chord_symbols = "BbM9 Am7/D7 GM7 Fm7b5/B7 Em7/A7 Dm7/G7 CM7 Fm6/Bb9"
+    # chord_symbols = "BbM9 Am7/D7 GM7 Fm7b5/B7 Em7/A7 Dm7/G7 CM7 Fm6/Bb9"
+    chord_symbols = "Am7 D7 GM7 Cm7/F7 Bbmaj7 Am7/D7 Gm7/C7 FMaj7"
     
-    mode = 1 # 0 is normal, 1 is with more bass; 1 is generally better, but 0 can produce higher, more quiet vibes
+    mode = 0 # 0 is normal, 1 is with more bass
     
     # Check if the result folder exists, if not, create it
     result_folder = "./result"
