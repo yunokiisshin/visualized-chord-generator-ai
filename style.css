@@ -1,12 +1,36 @@
-#midiContainer {
+body, html {
   position: relative;
   width: 100%;
   height: 100vh;
-  background-color: #f0f0f0; /* Light grey background */
+  margin: 0;
+  padding: 0;
+  background-color: #e1f6b6; /* Light grey background */
 }
+
 
 .note-rectangle {
   position: absolute;
   background-color: #4CAF50; /* Green color for the rectangles */
   /* Additional styling as needed */
 }
+
+.midiContainer {
+  width: 900px; /* Fixed width */
+  height: 400px; /* Fixed height */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centering */
+  background-color: #fff; /* Optional: background color */
+  /* Add box-shadow, border, or other styles as needed */
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 600px) {
+  .midiContainer {
+      width: 80vw; /* Adjust width for smaller screens */
+      height: 35vh; /* Adjust height based on your preference */
+      /* Ensure the aspect ratio is somewhat maintained for smaller screens */
+  }
+}
+
