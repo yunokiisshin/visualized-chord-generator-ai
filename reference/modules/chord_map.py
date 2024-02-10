@@ -14,8 +14,8 @@ note_dict = dict([("root", []), ("third", []), ("fifth", []), ("seventh", []), (
 # Constants for MIDI note range
 LOWEST_NOTE = pitch.Pitch("F3").midi
 HIGHEST_NOTE = pitch.Pitch("E5").midi
-print("LOWEST_NOTE: ", LOWEST_NOTE) # 53
-print("HIGHEST_NOTE: ", HIGHEST_NOTE) # 76
+# print("LOWEST_NOTE: ", LOWEST_NOTE) # 53
+# print("HIGHEST_NOTE: ", HIGHEST_NOTE) # 76
 
 ''' Shifts a note by a given number of semitones. '''
 def shift(note, semitones):
