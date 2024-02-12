@@ -1,6 +1,6 @@
 import sys
-from modules.generate_midi_from_chord import *
-from modules.chord_map import *
+from generate_midi_from_chord import *
+from chord_map import *
 import openai
 import os
 from dotenv import load_dotenv
@@ -101,6 +101,8 @@ def main():
         # mf.write()
         # mf.close()
         
+        print(json.dumps(json_output))
+        
         
         
     except openai.error.OpenAIError as e:
@@ -112,5 +114,6 @@ def main():
         sys.exit(1)
         
 if __name__ == "__main__":
-    prompt = sys.argv[1] if len(sys.argv) > 1 else "Generate a jazz chord progression"
+    # prompt = sys.argv[1] if len(sys.argv) > 1 else "Generate a jazz chord progression"
+    main()
     # Use 'prompt' wherever necessary in your script

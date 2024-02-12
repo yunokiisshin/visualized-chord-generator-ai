@@ -10,16 +10,12 @@ import random
 # handy class to control json_output element (also a class practice)
 class jsonElement:
     
-    content = {
-        "chord" : "",
-        "length" : 4,
-        "notes" : []
-    }
-    
-    def __init__(self, chord = str, length = int, notes = list): 
-        self.content["chord"] = chord
-        self.content["length"] = length
-        self.content["notes"] = notes
+    def __init__(self, chord=str, length=int, notes=list): 
+        self.content = {
+            "chord": chord,
+            "length": length,
+            "notes": notes
+        }
 
     def setChord(self, chord):
         self.content["chord"] = chord        
@@ -31,9 +27,13 @@ class jsonElement:
         self.content["notes"] = notes
         
     def returnContent(self):
-        return dict(self.content)
+        return self.content
 
-
+    def printContent(self):
+        print("content: ")
+        print(self.content["chord"])
+        print(self.content["length"])
+        print(self.content["notes"])
 
 
 # dictionary container for every possible note for the processed chord; refreshes per chord
@@ -587,9 +587,9 @@ def generate(root_note, chord_type, mode, previous_notes): # previous notes is l
             else:
                 notes.append(bottom_root)
     
-    print("Final notes: " + str(notes))
+    # print("Final notes: " + str(notes))
     
-    jsonResult = jsonElement(str(root_note + chord_type), , notes)
+    jsonResult = jsonElement(str(root_note + chord_type), 4, notes)
     
     # convert the value to MIDI-suited data            
     note_pitches = []  
@@ -600,4 +600,4 @@ def generate(root_note, chord_type, mode, previous_notes): # previous notes is l
         p.midi = midi_number
         note_pitches.append(p)
     
-    return note_pitches, notes
+    return note_pitches, notes, jsonResult

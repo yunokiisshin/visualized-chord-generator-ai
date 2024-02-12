@@ -14,13 +14,14 @@ from chord_map import *
 # stores the previous generation history so the next iteration is smooth
 chord_history = {'symbol': None, 'notes': []}
 
-# Output for json parsing
-json_output = dict()
-
-json_index = 0
 
 
 def generate_midi_from_chord(chord_symbols, mode):
+    
+    # Output for json parsing
+    json_output = dict()
+
+    json_index = 0
     
     # Create a music21 stream object to hold the notes and chords
     music_stream = stream.Stream()    
@@ -54,8 +55,8 @@ def generate_midi_from_chord(chord_symbols, mode):
             chords_in_bar = [bar] # if there's only one chord in the bar, still make it a list
 
         for chord_symbol in chords_in_bar:
-            print()
-            print("  chord_symbol: ", chord_symbol)
+            # print()
+            # print("  chord_symbol: ", chord_symbol)
             
             # Determine the root note and the type of chord
             root_note = chord_symbol[0]
@@ -77,7 +78,7 @@ def generate_midi_from_chord(chord_symbols, mode):
             
             # Otherwise, generate new notes
             else:  
-                notes, note_list = generate(root_note, chord_type, mode, previous_notes)
+                notes, note_list, jsonResult = generate(root_note, chord_type, mode, previous_notes)
                 previous_notes.clear()
                 previous_notes.extend(notes)
 
@@ -90,6 +91,13 @@ def generate_midi_from_chord(chord_symbols, mode):
             c = chord.Chord(notes, duration=duration.Duration(note_length)) # Create a music21 chord object with these notes
             # Add the chord to the stream
             music_stream.append(c)
+            
+            jsonResult.setLength(note_length)
+            
+            sub_dict = jsonResult.returnContent()
+            json_output.update({str(json_index): sub_dict})
+            json_index += 1
+            
 
     # Once all the chords have been added to the stream, write the stream to a MIDI file
     
