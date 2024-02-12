@@ -589,7 +589,7 @@ def generate(root_note, chord_type, mode, previous_notes): # previous notes is l
     
     # print("Final notes: " + str(notes))
     
-    jsonResult = jsonElement(str(root_note + chord_type), 4, notes)
+    jsonResult = jsonElement(str(root_note + chord_type), int(4), notes)
     
     # convert the value to MIDI-suited data            
     note_pitches = []  

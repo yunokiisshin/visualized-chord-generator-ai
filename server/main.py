@@ -103,7 +103,10 @@ def main():
         
         print(json.dumps(json_output))
         
-        
+        # Save the JSON output to a file
+        json_filename = f"{chord_name}.json"  # Construct the JSON filename using f-string
+        with open(json_filename, 'w') as json_file:
+            json.dump(json_output, json_file, indent=4)
         
     except openai.error.OpenAIError as e:
         print(f"OpenAI API error: {e}", file=sys.stderr)

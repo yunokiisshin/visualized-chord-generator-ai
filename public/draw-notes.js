@@ -1,244 +1,192 @@
-// MIDI note range
-const LOWEST_NOTE = 41; // F#3
+// Constants and initial setup
+const LOWEST_NOTE = 52; // F#3
 const HIGHEST_NOTE = 76; // D5
-
-// Preload audio files
-// const audios = [];
-// for (let i = 54; i < 75; i++) {
-//     const audio = new Audio("./notes/" + i + ".wav");
-//     audios.push(audio);
-// }
-
-// constants for drawings
 const gap_X = 8; // gap_X between rows
 const gap_Y = 4; // gap_Y between columns
-
-const screenWidth = window.innerWidth;
-const screenHeight = window.innerHeight;
-
-
-// const rectWidth = (screenWidth / 8) - gap_X; // Width of each column (and thus each rectangle)
-// const rectHeight =  (screenHeight - (HIGHEST_NOTE - LOWEST_NOTE) * (gap_Y)) / (HIGHEST_NOTE - LOWEST_NOTE + 1); // Height of the rectangle, can be adjusted
-
-// Access the midiContainer element
 const midiContainer = document.getElementById('midiContainer');
-
-// Get the current dimensions of the midiContainer
-const midiContainerWidth = midiContainer.offsetWidth;
-const midiContainerHeight = midiContainer.offsetHeight;
-
-// const rectWidth = (midiContainerWidth / 8) - gap_X; // Adjusted width of each rectangle
-// const rectHeight = (midiContainerHeight - (HIGHEST_NOTE - LOWEST_NOTE) * (gap_Y)) / (HIGHEST_NOTE - LOWEST_NOTE + 1); // Adjusted height
-
 let rectWidth;
 let rectHeight;
 
-
-// chord_symbols = "Am7 D7 GM7 Cm7/F7 Bbmaj7 Am7/D7 Gm7/C7 FMaj7"
-// a nested dictionary of chords
-const chordOutput = {
-    '0': {
-        "chord": "Am7",
-        "length": 4,
-        "notes" : [72, 67, 69, 76, 57]
+const hello_midi = {
+    "0": {
+        "chord" : "",
+        "length" : 0.5,
+        "notes": []
     },
-
-    '1': {
-        "chord": "D7",
-        "length": 4,
-        "notes": [69, 60, 62, 66, 50]
+    "1": {
+        "chord" : "",
+        "length" : 2,
+        "notes" : [54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75]
     },
-
-    '2': {
-        "chord": "GM7",
-        "length": 4,
-        "notes": [62, 66, 59, 55, 43]
+    "2": {
+        "chord" : "",
+        "length" : 3,
+        "notes" : [63,64,65,66]
     },
-
-    '3': {
-        "chord": "Cm7",
-        "length": 2,
-        "notes": [60, 58, 55, 63, 48]
+    "3": {
+        "chord" : "",
+        "length" : 2,
+        "notes" : [54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75]
     },
-
-    '4': {
-        "chord": "F7",
-        "length": 2,
-        "notes": [57, 65, 60, 63, 53]
+    "4": {
+        "chord" : "",
+        "length" : 0.5,
+        "notes": []
     },
-
-    '5': {
-        "chord": "Bbmaj7",
-        "length": 4,
-        "notes": [58, 62, 65, 57, 46]
+    "5": {
+        "chord" : "",
+        "length" : 2,
+        "notes" : [54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75]
     },
-
-    '6': {
-        "chord": "Am7",
-        "length": 2,
-        "notes": [57, 55, 60, 64, 45]
+    "6": {
+        "chord" : "",
+        "length" : 3,
+        "notes" : [54,55,56,57,63,64,65,66,72,73,74,75]
     },
-
-    '7': {
-        "chord": "D7",
-        "length": 2,
-        "notes": [57, 62, 60, 66, 50]
+    "7": {
+        "chord" : "",
+        "length" : 0.5,
+        "notes": []
     },
-
-    '8': {
-        "chord": "Gm7",
-        "length": 2,
-        "notes": [58, 53, 55, 62, 43]
+    "8": {
+        "chord" : "",
+        "length" : 2,
+        "notes" : [54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75]
     },
-
-    '9': {
-        "chord": "C7",
-        "length": 2,
-        "notes": [55, 58, 64, 60, 48]
+    "9": {
+        "chord" : "",
+        "length" : 3,
+        "notes" : [54,55,56,57]
     },
-
-    '10': {
-        "chord": "FMaj7",
-        "length": 4,
-        "notes": [57, 64, 60, 65, 53]
+    "10": {
+        "chord" : "",
+        "length" : 0.5,
+        "notes": []
     },
-
+    "11": {
+        "chord" : "",
+        "length" : 2,
+        "notes" : [54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75]
+    },
+    "12": {
+        "chord" : "",
+        "length" : 3,
+        "notes" : [54,55,56,57]
+    },
+    "13": {
+        "chord" : "",
+        "length" : 0.5,
+        "notes": []
+    },
+    "14": {
+        "chord" : "",
+        "length" : 2,
+        "notes" : [54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75]
+    },
+    "15": {
+        "chord" : "",
+        "length" : 2,
+        "notes" : [54,55,56,57,72,73,74,75]
+    },
+    "16": {
+        "chord" : "",
+        "length" : 2,
+        "notes" : [54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75]
+    }
 }
 
-// note representation class
-class NoteRectangle { 
-    /**
-     * constructor for the note rectangle. Each NoteRectangle object can represent a MIDI note
-     * with appropriate functionalities
-     * @param {dict} chordOutput: dictionary of chord information; usually 
-     *                            from the chordOutput dictionary in the form of chordOutput[i]
-     * @param {int} note:      MIDI note number in the form of integers
-     * @param {file} audio:       .wav audio file corresponding to the sound of the note
-     *                            in the form of audios[i]  
-     */
-    constructor(key, chordOutputInstance, note, audio) { 
-        // chordOutputInstance looks like: 
-        // {
-        //     "chord": "Bbmaj7",
-        //     "length": 4,
-        //     "notes": {'root': [58, 70], 'third': [62, 74], 'fifth': [53, 65], 'seventh': [57, 69], 'ninth': [], 'extentions': []}
-        // },
-        
-        // musical qualities
-        this.chord = chordOutputInstance['chord'];
-        this.duration = chordOutputInstance['length'];
-        this.note = note;
-        this.audio = audio;
-        
+
+
+// Class definition for NoteRectangle
+class NoteRectangle {
+    constructor(key, chordData, note, note_audio = "") {
         this.key = key;
-        this.width = rectWidth * (Number(this.duration) / 4); 
-        // console.log("width: " + this.width)
-        this.x = this.calculateXPos(chordOutputInstance); 
+        this.chord = chordData[key]['chord'];
+        this.duration = chordData[key]['length'];
+        this.note = note;
+        this.note_audio = note_audio;
+        this.width = rectWidth * (Number(this.duration) / 4);
+        this.x = this.calculateXPos(key, chordData); 
         this.y = this.calculateYPos(note); 
-
-        // console.log("duration: " + this.duration)
-        this.height = rectHeight; 
-
-        // console.log("chordOutputInstance: " + chordOutputInstance)
+        this.height = rectHeight;
     }
 
-    draw() { 
+    draw() {
+        // console.log("  in draw()");
+        // console.log("  this.x = " + this.x);
+        // console.log("  this.y = " + this.y);
+        // console.log("  this.width = " + this.width);
+        // console.log("  this.height = " + this.height);
+
         const noteDiv = document.createElement('div');
         noteDiv.classList.add('note-rectangle');
-
-        // Calculate the x and y position
-        const xPos = this.x;
-        const yPos = this.y;
-        // console.log(xPos, yPos);
-        const rectWidth = this.width;
-        const rectHeight = this.height;
-
-        // Set the style for the rectangle
-        noteDiv.style.left = `${xPos}px`;
-        noteDiv.style.top = `${yPos}px`;
-        noteDiv.style.width = `${rectWidth}px`;
-        noteDiv.style.height = `${rectHeight}px`;
-
-        // Append the rectangle to the container
+        noteDiv.style.left = `${this.x}px`;
+        noteDiv.style.top = `${this.y}px`;
+        noteDiv.style.width = `${this.width}px`;
+        noteDiv.style.height = `${this.height}px`;
         midiContainer.appendChild(noteDiv);
     }
 
-    calculateXPos() {
+    calculateXPos(key, chordData) {
         let total_length = 0 + gap_X;
-        for (let i = 0; i < Number(this.key); i++) {
-            let duration = Number(chordOutput[i.toString()]["length"]);
-            total_length += rectWidth * (Number(duration) / 4) + gap_X / 2;
+        for (let i = 0; i < Number(key); i++) {
+            // Check if hello_midi has the key before accessing its properties
+            if (chordData.hasOwnProperty(i.toString())) {
+                let duration = Number(chordData[i.toString()]["length"]);
+                total_length += rectWidth * (Number(duration) / 4) + gap_X / 2;
+            }
         }
         return total_length;
     }
+    
 
     calculateYPos(noteValue) {
-        return (HIGHEST_NOTE - noteValue) * (rectHeight + gap_Y) + gap_Y ;
-    }
-
-    setWidth(width) {
-        this.width = width;
-    }
-
-    setHeight(height) {
-        this.height = height;
-    }
-
-    setXPos(x) {
-        this.x = x;
-    }
-
-    setYPos(y) {
-        this.y = y;
-    }
-
-    setNote(note) {
-        this.note = note;
+        return (HIGHEST_NOTE - noteValue) * (rectHeight + gap_Y) + gap_Y;
     }
 }
 
 // Function to adjust rectangle dimensions and positions on resize
 function adjustOnResize() {
-    // Use the container's offsetWidth and offsetHeight as the maximum dimensions
     rectWidth = (midiContainer.offsetWidth / 8) - gap_X;
     rectHeight = (midiContainer.offsetHeight - (HIGHEST_NOTE - LOWEST_NOTE) * (gap_Y)) / (HIGHEST_NOTE - LOWEST_NOTE + 1);
+    drawRectangles(); // Redraw rectangles with new dimensions
+}
 
-    // Clear existing rectangles
+// Function to draw rectangles for all chords
+function drawRectangles(chordData = hello_midi) {
     while (midiContainer.firstChild) {
-        midiContainer.removeChild(midiContainer.firstChild);
+        midiContainer.removeChild(midiContainer.firstChild); // Clear existing rectangles
     }
 
-    // Redraw rectangles with new dimensions
-    drawRectangles();
+    Object.keys(chordData).forEach(key => {
+        chordData[key]["notes"].forEach(note => {
+            const noteRect = new NoteRectangle(key, chordData, note);
+            noteRect.draw();
+        });
+    });
 }
 
-// Function to draw rectangles
-function drawRectangles() {
-    const chordOutputKeyList = Object.keys(chordOutput);
-    for (let i = 0; i < chordOutputKeyList.length; i++) {
-        const key = chordOutputKeyList[i];
-        for (let j = 0; j < chordOutput[key]["notes"].length; j++) {
-            const currentNoteRect = new NoteRectangle(key, chordOutput[key], chordOutput[key]["notes"][j], 'audio');
-            currentNoteRect.draw();
-        }
-    }
-}
 
-// Event listener for window resize to dynamically adjust the layout
-window.addEventListener('resize', adjustOnResize);
+document.addEventListener('DOMContentLoaded', function() {
+    adjustOnResize(); // Ensure this is called after the DOM is fully loaded
 
+    // Button click event listener to fetch and draw new chord data
+    document.getElementById('generateButton').addEventListener('click', function() {
+        console.log("Generate is pressed");
+        fetch('/generate-chords', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                drawRectangles(data); // Draw rectangles with fetched chord data
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    });
+
+    // Event listener for window resize to dynamically adjust the layout
+    window.addEventListener('resize', adjustOnResize);
+});
 
 // Initial adjustment and drawing
 adjustOnResize();
-
-// Function to get a random integer within a range, inclusive
-function randomIntInRange(min, max) {
-    min = Math.ceil(min); // Ensure min is rounded up to the nearest integer
-    max = Math.floor(max); // Ensure max is rounded down to the nearest integer
-    return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum and minimum are inclusive
-}
-
-
-drawRectangles();
-
-
